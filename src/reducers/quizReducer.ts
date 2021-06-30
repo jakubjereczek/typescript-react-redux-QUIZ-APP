@@ -1,22 +1,27 @@
 import { Action } from "redux";
-import { ALL_QUIZ_QUESTION_GET } from "../utils/types";
+import { ALL_QUIZ_QUESTION_GET, ALL_QUIZ_QUESTION_GET_SUCCESS, ALL_QUIZ_QUESTION_GET_FAILED } from "../utils/types";
 
-import Quiz from '../models/quiz';
+import Quiz from "../models/quiz";
 
 interface QuizInitialState {
-    quizes: Quiz[]
+    data: Quiz[]
 }
 
 const initialState: QuizInitialState = {
-    quizes: []
+    data: []
 }
 
-function quizReducer(state = initialState, action: Action) {
+function quizReducer(state = initialState, action: Action | any) {
     switch (action.type) {
         case ALL_QUIZ_QUESTION_GET:
-            return {
-                ...state
-            }
+            return state;
+        case ALL_QUIZ_QUESTION_GET_SUCCESS:
+            return [
+                state,
+                ...action.payload
+            ]
+        default:
+            return state;
     }
 }
 

@@ -4,21 +4,24 @@ import {
     ALL_QUIZ_QUESTION_GET_FAILED
 } from '../utils/types';
 
-import { API } from '../utils/api';
-
 import { Dispatch } from 'react';
+import { fetchDatabase } from '../utils/db';
 
-export const getQuiz = () => {
+export const getQuizes = () => {
 
     return async (dispatch: Dispatch<any>) => {
         dispatch({
             type: ALL_QUIZ_QUESTION_GET
         })
+
+        // It's only simulation of async data fetch.
+        const response = await fetchDatabase();
+        console.log(response)
+
         try {
-            const request = await fetch(API);
             dispatch({
                 type: ALL_QUIZ_QUESTION_GET_SUCCESS,
-                payload: request.body
+                payload: response,
             })
         } catch (error) {
             dispatch({
@@ -26,5 +29,12 @@ export const getQuiz = () => {
                 payload: error
             })
         }
+    }
+}
+
+export const doSomething = {
+    type: ALL_QUIZ_QUESTION_GET,
+    payload: {
+        result: "lala"
     }
 }
