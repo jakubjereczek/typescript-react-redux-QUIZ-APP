@@ -3,19 +3,19 @@ import rootReducer from "../reducers/rootReducer";
 import thunk from 'redux-thunk';
 import { composeWithDevTools } from 'redux-devtools-extension';
 
+import { initialState } from "../reducers/gameReducer";
+
 export interface ApplicationState {
     quiz: any,
     game: any
 }
 
-const initialState: ApplicationState = {
+const initialRootState: ApplicationState = {
     quiz: [],
-    game: {
-
-    }
+    game: initialState
 };
 
-const store = createStore(rootReducer, initialState,
+const store = createStore(rootReducer, initialRootState,
     composeWithDevTools(
         applyMiddleware(thunk),
     ))

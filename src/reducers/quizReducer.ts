@@ -4,11 +4,9 @@ import { ALL_QUIZ_QUESTION_GET, ALL_QUIZ_QUESTION_GET_SUCCESS, ALL_QUIZ_QUESTION
 import Quiz from "../models/quiz";
 
 interface QuizInitialState {
-    data: Quiz[]
 }
 
 const initialState: QuizInitialState = {
-    data: []
 }
 
 function quizReducer(state = initialState, action: Action | any) {
@@ -17,7 +15,6 @@ function quizReducer(state = initialState, action: Action | any) {
             return state;
         case ALL_QUIZ_QUESTION_GET_SUCCESS:
             return [
-                state,
                 ...action.payload
             ]
         default:

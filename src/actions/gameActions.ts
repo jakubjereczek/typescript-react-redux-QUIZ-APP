@@ -15,14 +15,11 @@ export const selectAnswer = (question: Quiz, selectedAnswer: string) => {
     }
 }
 
-export const resetGame = () => {
-    return {
-        type: GAME_RESET_STATE
-    }
+export const resetGame = {
+    type: GAME_RESET_STATE
 }
 
-export const startGame = () => {
-    return {
-        type: GAME_START
-    }
+// to do - loading state
+export const startGame = {
+    type: GAME_START
 }
