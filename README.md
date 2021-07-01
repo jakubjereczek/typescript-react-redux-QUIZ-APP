@@ -1,7 +1,8 @@
 # React TypeScript, Redux QUIZ APP
-Quiz application, the project was created to sum up my knowledge and improve TypeScript and Redux.
+Little Quiz application, the project was created to improve TypeScript and Redux knowledge.
 
 ## Technologies
 - TypeScript
 - React framework,
 - React Redux
+
