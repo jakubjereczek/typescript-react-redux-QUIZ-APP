@@ -5,10 +5,14 @@ import { composeWithDevTools } from 'redux-devtools-extension';
 
 export interface ApplicationState {
     quiz: any,
+    game: any
 }
 
 const initialState: ApplicationState = {
-    quiz: []
+    quiz: [],
+    game: {
+
+    }
 };
 
 const store = createStore(rootReducer, initialState,

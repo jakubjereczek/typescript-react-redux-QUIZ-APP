@@ -4,10 +4,11 @@ import { useEffect } from "react";
 
 import { useDispatch, useSelector } from "react-redux";
 
-import { getQuizes, doSomething } from '../actions/quizActions';
+import { getQuizes } from '../actions/quizActions';
 import Quiz from "../models/quiz";
 
 import { ApplicationState } from "../utils/store";
+import Game from "./Game";
 import LoadingIndicator from "./LoadingIndicator";
 
 const Page: FC = () => {
@@ -33,9 +34,7 @@ const Page: FC = () => {
     }, [quizes])
 
     return isLoaded ? (
-        <div>
-            {JSON.stringify(quizes)}
-        </div>
+        <Game quizes={quizes} />
     ) : <LoadingIndicator />
 }
 

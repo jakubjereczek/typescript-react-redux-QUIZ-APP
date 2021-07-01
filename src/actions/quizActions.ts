@@ -31,10 +31,3 @@ export const getQuizes = () => {
         }
     }
 }
-
-export const doSomething = {
-    type: ALL_QUIZ_QUESTION_GET,
-    payload: {
-        result: "lala"
-    }
-}
