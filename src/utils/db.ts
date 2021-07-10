@@ -119,7 +119,7 @@ const database: Array<Quiz> = [
     }
 ];
 
-export function fetchDatabase() {
+export function fetchDatabase(): Promise<Array<Quiz>> {
     return new Promise((resolve, reject) => {
         setTimeout(() => {
             resolve(database);

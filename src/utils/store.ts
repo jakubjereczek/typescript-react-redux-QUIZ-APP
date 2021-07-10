@@ -20,4 +20,7 @@ const store = createStore(rootReducer, initialRootState,
         applyMiddleware(thunk),
     ))
 
+export type RootState = ReturnType<typeof store.getState>;
+export type AppDispatch = typeof store.dispatch;
+
 export default store;

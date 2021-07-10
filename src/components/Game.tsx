@@ -38,7 +38,6 @@ const Game: FC<GameProps> = ({ quizes }) => {
     }
 
     const restartGame = () => {
-        console.log("Restart game")
         dispatch(resetGame);
         setCurrentIteration(0);
         setCurrentQueston(quizes[0]);

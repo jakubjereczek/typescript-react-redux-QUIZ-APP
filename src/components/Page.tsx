@@ -8,34 +8,31 @@ import { getQuizes } from '../actions/quizActions';
 import Quiz from "../models/quiz";
 
 import { ApplicationState } from "../utils/store";
+import { Status, STATUS_LOADING } from "../utils/types";
 import Game from "./Game";
 import LoadingIndicator from "./LoadingIndicator";
 
 const Page: FC = () => {
 
-    const [isLoaded, setLoaded] = useState(false);
-
     const dispatch = useDispatch();
 
-    let quizes: Array<Quiz> = useSelector<ApplicationState, Array<Quiz>>(state => state.quiz);
+    const quizes: Array<Quiz> = useSelector<ApplicationState, Array<Quiz>>(state => state.quiz.entries);
+
+    const loadingStatus: Status = useSelector<ApplicationState, Status>(state => state.quiz.status);
 
     useEffect(() => {
-        dispatch(getQuizes());
+        const getQuizesThunk = getQuizes();
+        dispatch(getQuizesThunk);
     }, []);
 
-    const initialRender = useRef(true);
-    useEffect(() => {
-        if (!initialRender.current) {
-            const isLoaded: boolean = quizes.length > 0 ? true : false;
-            setLoaded(isLoaded);
-        } else {
-            initialRender.current = false;
-        }
-    }, [quizes])
 
-    return isLoaded ? (
-        <Game quizes={quizes} />
-    ) : <LoadingIndicator />
+    if (loadingStatus === STATUS_LOADING) {
+        return <LoadingIndicator />
+    };
+
+    return <Game quizes={quizes} />;
+
 }
 
 export default Page;
+
