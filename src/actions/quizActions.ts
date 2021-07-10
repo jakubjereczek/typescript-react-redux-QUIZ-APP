@@ -4,30 +4,42 @@ import {
     ALL_QUIZ_QUESTION_GET_FAILED
 } from '../utils/types';
 
-import { Dispatch } from 'react';
 import { fetchDatabase } from '../utils/db';
+import { AppDispatch, RootState } from '../utils/store';
+import Quiz from '../models/quiz';
 
 export const getQuizes = () => {
 
-    return async (dispatch: Dispatch<any>) => {
-        dispatch({
-            type: ALL_QUIZ_QUESTION_GET
-        })
+    return async function getQuizesFetchThunk(dispatch: AppDispatch, getState: RootState) {
+        dispatch(quizesLoadedStarted);
 
         // It's only simulation of async data fetch.
-        const response = await fetchDatabase();
-        console.log(response)
+        const response: Quiz[] = await fetchDatabase();
 
         try {
-            dispatch({
-                type: ALL_QUIZ_QUESTION_GET_SUCCESS,
-                payload: response,
-            })
+            dispatch(quizesLoadedSuccess(response))
         } catch (error) {
-            dispatch({
-                type: ALL_QUIZ_QUESTION_GET_FAILED,
-                payload: error
-            })
+            dispatch(quizesLoadedFailed)
         }
     }
+}
+
+const quizesLoadedStarted = (
+    {
+        type: ALL_QUIZ_QUESTION_GET
+    }
+)
+
+const quizesLoadedSuccess = (quizes: Quiz[]) => {
+    return ({
+        type: ALL_QUIZ_QUESTION_GET_SUCCESS,
+        payload: quizes,
+    })
+}
+
+const quizesLoadedFailed = (error: string) => {
+    return ({
+        type: ALL_QUIZ_QUESTION_GET_FAILED,
+        payload: error
+    })
 }
