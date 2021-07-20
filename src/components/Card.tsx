@@ -1,6 +1,6 @@
 import React, { FC, useMemo } from 'react';
 import Quiz from '../models/quiz';
-import { GameState } from '../reducers/gameReducer';
+import { GameState } from '../reducers/gameSlice';
 import { randomArrayValues } from '../utils/helpers';
 import './Card.scss';
 

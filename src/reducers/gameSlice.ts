@@ -1,4 +1,4 @@
-import { Action } from "redux";
+import { AnyAction } from "redux";
 import { GAME_ANSWER_QUESTION, GAME_START, GAME_RESET_STATE } from "../utils/types";
 
 export interface GameState {
@@ -11,7 +11,7 @@ export interface GameState {
     }
 }
 
-export const initialState: GameState = {
+const initialState: GameState = {
     questions: 0,
     good_answers: 0,
     wrong_answers: 0,
@@ -21,8 +21,7 @@ export const initialState: GameState = {
     }
 }
 
-function gameReducer(state = initialState, action: Action | any) {
-    console.log(state, initialState, action);
+function gameSlice(state = initialState, action: AnyAction) {
     switch (action.type) {
         case GAME_ANSWER_QUESTION:
             const { correct_answer } = action.payload.question;
@@ -47,4 +46,4 @@ function gameReducer(state = initialState, action: Action | any) {
     }
 }
 
-export default gameReducer;
+export default gameSlice;

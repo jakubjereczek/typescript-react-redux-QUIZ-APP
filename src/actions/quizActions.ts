@@ -5,24 +5,32 @@ import {
 } from '../utils/types';
 
 import { fetchDatabase } from '../utils/db';
-import { AppDispatch, RootState } from '../utils/store';
+import { RootState } from '../utils/store';
 import Quiz from '../models/quiz';
+import { ThunkAction } from 'redux-thunk';
+import { AnyAction } from 'redux';
 
-export const getQuizes = () => {
+export type AppThunk<ReturnType = void> = ThunkAction<
+    ReturnType,
+    RootState,
+    unknown,
+    AnyAction
+>
 
-    return async function getQuizesFetchThunk(dispatch: AppDispatch, getState: RootState) {
+export const getQuizes = (): AppThunk<void> =>
+    async dispatch => {
         dispatch(quizesLoadedStarted);
 
-        // It's only simulation of async data fetch.
         const response: Quiz[] = await fetchDatabase();
 
         try {
             dispatch(quizesLoadedSuccess(response))
         } catch (error) {
-            dispatch(quizesLoadedFailed)
+            const errorInstance = new Error(error);
+            dispatch(quizesLoadedFailed(errorInstance.message))
         }
     }
-}
+
 
 const quizesLoadedStarted = (
     {

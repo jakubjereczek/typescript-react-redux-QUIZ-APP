@@ -1,39 +1,39 @@
-import { Action } from "redux";
-import { ALL_QUIZ_QUESTION_GET, ALL_QUIZ_QUESTION_GET_SUCCESS, ALL_QUIZ_QUESTION_GET_FAILED, STATUS_IDLE, Status, STATUS_SUCCEDDED, STATUS_FAILED, STATUS_LOADING } from "../utils/types";
+import { AnyAction } from "redux";
+import { ALL_QUIZ_QUESTION_GET, ALL_QUIZ_QUESTION_GET_SUCCESS, ALL_QUIZ_QUESTION_GET_FAILED, Status } from "../utils/types";
 
 import Quiz from "../models/quiz";
 
-interface QuizInitialState {
+export interface QuizState {
     status: Status
     entries: Array<Quiz>
 }
 
-const initialState: QuizInitialState = {
-    status: STATUS_IDLE,
+const initialState: QuizState = {
+    status: Status.STATUS_IDLE,
     entries: []
 }
 // TO DO: jest inny format jakby state...data itd.
 
-function quizReducer(state = initialState, action: Action | any) {
+function quizSlice(state = initialState, action: AnyAction) {
     switch (action.type) {
         case ALL_QUIZ_QUESTION_GET:
             return {
                 entries: [],
-                status: STATUS_LOADING
+                status: Status.STATUS_LOADING
             };
         case ALL_QUIZ_QUESTION_GET_SUCCESS:
             return {
                 entries: action.payload,
-                status: STATUS_SUCCEDDED
+                status: Status.STATUS_SUCCEDDED
             }
         case ALL_QUIZ_QUESTION_GET_FAILED:
             return {
                 entries: [],
-                status: STATUS_FAILED
+                status: Status.STATUS_FAILED
             }
         default:
             return state;
     }
 }
 
-export default quizReducer;
+export default quizSlice;

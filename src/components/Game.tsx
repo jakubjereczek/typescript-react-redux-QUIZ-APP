@@ -3,10 +3,9 @@ import Quiz from '../models/quiz';
 import Card from './Card';
 import './Card.scss';
 
-import { useDispatch, useSelector } from "react-redux";
 import { selectAnswer, resetGame } from '../actions/gameActions'
-import { ApplicationState } from '../utils/store';
-import { GameState } from '../reducers/gameReducer';
+import { GameState } from '../reducers/gameSlice';
+import { useAppDispatch, useAppSelector } from '../utils/hooks';
 
 interface GameProps {
     quizes: Array<Quiz>,
@@ -14,7 +13,7 @@ interface GameProps {
 
 const Game: FC<GameProps> = ({ quizes }) => {
 
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
 
     const [isStarted, setStarted] = useState<boolean>(false);
     const [isFinish, setFinish] = useState<boolean>(false);
@@ -47,7 +46,7 @@ const Game: FC<GameProps> = ({ quizes }) => {
 
     const handleOnButtonStartClick = () => setStarted(true);
 
-    let gameInformation: GameState = useSelector<ApplicationState, GameState>(state => state.game);
+    let gameInformation: GameState = useAppSelector(state => state.game);
 
     return (
         <div>
