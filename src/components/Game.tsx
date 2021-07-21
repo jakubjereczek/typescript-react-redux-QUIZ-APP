@@ -3,15 +3,20 @@ import Quiz from '../models/quiz';
 import Card from './Card';
 import './Card.scss';
 
-import { selectAnswer, resetGame } from '../actions/gameActions'
+import { selectAnswer, resetGame, startGame } from '../actions/gameActions'
 import { GameState } from '../reducers/gameSlice';
 import { useAppDispatch, useAppSelector } from '../utils/hooks';
+import { useTimer } from '../utils/useTimer';
+import { useCallback } from 'react';
+import { NO_ANSWER } from '../utils/types';
 
 interface GameProps {
     quizes: Array<Quiz>,
 }
 
 const Game: FC<GameProps> = ({ quizes }) => {
+
+    const [remainingTime, timeIsOver, setIsStarted, clearTimeInterval] = useTimer();
 
     const dispatch = useAppDispatch();
 
@@ -21,20 +26,34 @@ const Game: FC<GameProps> = ({ quizes }) => {
     const [currentIteration, setCurrentIteration] = useState<number>(0);
     const [answered, setAnswered] = useState<boolean>(false);
 
-    const nextQuestion = () => {
+    const nextQuestion = useCallback(() => {
         setCurrentIteration(prev => prev + 1);
-        if (currentIteration > quizes.length - 1)
+        if (currentIteration + 1 > quizes.length - 1) {
+            clearTimeInterval();
             setFinish(true);
-        setCurrentQueston(quizes[currentIteration]);
+            setIsStarted(false);
+        }
+        setCurrentQueston(quizes[currentIteration + 1]);
         setAnswered(false);
-    }
+        setIsStarted(true);
+    }, [clearTimeInterval, currentIteration, quizes, setIsStarted]);
 
     const checkAnswer = (event: React.MouseEvent<HTMLButtonElement>) => {
         const value = (event.target as HTMLButtonElement).textContent;
-        console.log(value)
         dispatch(selectAnswer(currentQuestion, value!));
+
         setAnswered(true);
+        setIsStarted(false);
+        clearTimeInterval();
     }
+
+    const skipAnswer = useCallback(() => {
+        dispatch(selectAnswer(currentQuestion, NO_ANSWER));
+
+        setAnswered(true);
+        setIsStarted(false);
+        clearTimeInterval();
+    }, []);
 
     const restartGame = () => {
         dispatch(resetGame);
@@ -42,9 +61,14 @@ const Game: FC<GameProps> = ({ quizes }) => {
         setCurrentQueston(quizes[0]);
         setStarted(false);
         setFinish(false);
+        clearTimeInterval();
     }
 
-    const handleOnButtonStartClick = () => setStarted(true);
+    const handleOnButtonStartClick = () => {
+        setStarted(true)
+        dispatch(startGame);
+        setIsStarted(true);
+    };
 
     let gameInformation: GameState = useAppSelector(state => state.game);
 
@@ -59,7 +83,11 @@ const Game: FC<GameProps> = ({ quizes }) => {
                     resetGame={restartGame}
                     answered={answered}
                     gameInformation={gameInformation}
-                    isFinish={isFinish} />}
+                    isFinish={isFinish}
+                    remainingTime={remainingTime}
+                    timeIsOver={timeIsOver}
+                    skipAnswer={skipAnswer}
+                    isLastQuestion={currentIteration === quizes.length - 1} />}
         </div>
     )
 }

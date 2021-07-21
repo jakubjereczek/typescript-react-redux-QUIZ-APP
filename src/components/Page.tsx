@@ -23,7 +23,7 @@ const Page: FC = () => {
     useEffect(() => {
         const getQuizesThunk = getQuizes();
         dispatch(getQuizesThunk);
-    }, []);
+    }, [dispatch]);
 
 
     if (loadingStatus === Status.STATUS_LOADING) {

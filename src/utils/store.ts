@@ -1,13 +1,15 @@
-import { configureStore } from '@reduxjs/toolkit'
+import { configureStore, Store } from '@reduxjs/toolkit'
 import gameReducer from "../reducers/gameSlice";
 import quizReduer from '../reducers/quizSlice';
+import timeCounterMiddleware from '../middlewares/timeCounter.middleware';
 
 
-const store = configureStore({
+const store: Store | any = configureStore({
     reducer: {
         game: gameReducer,
         quiz: quizReduer
-    }
+    },
+    middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(timeCounterMiddleware),
 })
 
 

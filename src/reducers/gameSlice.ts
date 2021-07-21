@@ -1,5 +1,5 @@
 import { AnyAction } from "redux";
-import { GAME_ANSWER_QUESTION, GAME_START, GAME_RESET_STATE } from "../utils/types";
+import { GAME_ANSWER_QUESTION, GAME_START, GAME_RESET_STATE, GAME_SET_TIMECOUNTER, NO_ANSWER } from "../utils/types";
 
 export interface GameState {
     questions: number,
@@ -9,6 +9,7 @@ export interface GameState {
         valid_answer: boolean | null,
         answer: string | null,
     }
+    userHasTimeToAnswerTheQuestion: boolean;
 }
 
 const initialState: GameState = {
@@ -18,7 +19,8 @@ const initialState: GameState = {
     lastQuestion: {
         valid_answer: null,
         answer: null,
-    }
+    },
+    userHasTimeToAnswerTheQuestion: true,
 }
 
 function gameSlice(state = initialState, action: AnyAction) {
@@ -26,6 +28,9 @@ function gameSlice(state = initialState, action: AnyAction) {
         case GAME_ANSWER_QUESTION:
             const { correct_answer } = action.payload.question;
             const selectedAnswer = action.payload.selectedAnswer;
+
+            if (selectedAnswer === NO_ANSWER) {
+            }
 
             const isValidAnswer = correct_answer === selectedAnswer;
             return {
@@ -41,6 +46,11 @@ function gameSlice(state = initialState, action: AnyAction) {
         case GAME_START:
         case GAME_RESET_STATE:
             return initialState;
+        case GAME_SET_TIMECOUNTER:
+            return {
+                ...state,
+                userHasTimeToAnswerTheQuestion: action.payload
+            }
         default:
             return state;
     }

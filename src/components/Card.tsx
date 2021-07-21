@@ -1,7 +1,10 @@
 import React, { FC, useMemo } from 'react';
+import { useEffect } from 'react';
+import { setTimeCounterValue } from '../actions/gameActions';
 import Quiz from '../models/quiz';
 import { GameState } from '../reducers/gameSlice';
 import { randomArrayValues } from '../utils/helpers';
+import { useAppDispatch } from '../utils/hooks';
 import './Card.scss';
 
 interface CardProps {
@@ -11,11 +14,16 @@ interface CardProps {
     resetGame: () => void;
     answered: boolean,
     gameInformation: GameState,
-    isFinish: boolean
+    isFinish: boolean,
+    remainingTime: number,
+    timeIsOver: boolean,
+    skipAnswer: () => void;
+    isLastQuestion: boolean,
 }
 
-const Card: FC<CardProps> = ({ question, checkAnswer, nextQuestion, resetGame, answered, gameInformation, isFinish }) => {
+const Card: FC<CardProps> = ({ question, checkAnswer, nextQuestion, resetGame, answered, gameInformation, isFinish, remainingTime, timeIsOver, skipAnswer, isLastQuestion }) => {
 
+    const dispatch = useAppDispatch();
 
     const answersList = useMemo(() => {
         if (!isFinish) {
@@ -24,7 +32,7 @@ const Card: FC<CardProps> = ({ question, checkAnswer, nextQuestion, resetGame, a
         return [];
     }, [question, isFinish]);
 
-    const randomAnswersList = randomArrayValues(answersList);
+    const randomAnswersList = useMemo(() => randomArrayValues(answersList), [answersList]);
 
     const answers = randomAnswersList.map((answer, index) => (
         <button key={index} onClick={checkAnswer} disabled={answered}>
@@ -32,22 +40,34 @@ const Card: FC<CardProps> = ({ question, checkAnswer, nextQuestion, resetGame, a
         </button>
     ))
 
+    useEffect(() => {
+        if (remainingTime === 0) {
+            dispatch(setTimeCounterValue(false)) // Time counter become set as false, the next function will change the value in middleware to true.
+
+            skipAnswer();
+        }
+    }, [dispatch, remainingTime, skipAnswer])
+
     return (
         <div>
-            <div className="results">
+            <div className="timer">
+                {!answered && !isFinish && `${(remainingTime / 1000)} seconds`}
+                {/* {timeIsOver && 'Time is over to answer the question! AGGgrr:('} */}
+            </div>
+            {isFinish && <div className="results">
                 <p>Corrects answers: {gameInformation.good_answers}</p>
                 <p>Wrong answers: {gameInformation.wrong_answers}</p>
-            </div>
+            </div>}
             {!isFinish ?
                 <React.Fragment>
                     <h2 className="question">{question.question}</h2>
                     <div className="answers">
                         {answers}
                     </div>
-                    {answered && <button onClick={nextQuestion}>Next question</button>}
+                    {answered && <button onClick={nextQuestion}>{isLastQuestion ? "Show results" : "Next question"}</button>}
                 </React.Fragment> :
                 <React.Fragment>
-                    <h2>Game is finish!</h2>
+                    <h2>The game is finished!</h2>
                     <button onClick={resetGame}>Try once more</button>
                 </React.Fragment>}
         </div>
